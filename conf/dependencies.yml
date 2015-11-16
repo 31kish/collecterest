@@ -1,0 +1,6 @@
+# Application dependencies
+
+require:
+    - play
+    - net.sourceforge.htmlcleaner -> htmlcleaner 2.8
+    - org.hamcrest -> hamcrest 1.3

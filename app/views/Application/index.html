@@ -1,0 +1,84 @@
+#{extends 'main.html' /}
+#{set title:'Collecterest' /}
+
+<!-- ParentView -->
+<div class="row white lighten-5">
+<!-- Left Colum -->
+<div class="col s2">
+	<div class="navbar-fixed">
+		<div class="nav-wrapper">
+			<div class="left_colum col s2">
+				<div class="row card-panel teal lighten-3">
+					<div class="row center-align">
+						<!-- <span class="white-text">ユーザ名</span> -->
+						<a class="waves-effect waves-teal btn-flat white-text" href="https://www.facebook.com/dialog/oauth?client_id=816412851817516&redirect_uri=http://localhost:9000/&state=SOME_ARBITRARY_BUT_UNIQUE_STRING">ログイン</a>
+					</div>
+<!-- 					<div class="row white-text">
+						<div class="divider"></div>
+						<div class="section">
+							<span>グループ</span>
+						</div>
+						<div class="divider"></div>
+							<p>ユーザ名1</p>
+							<p>ユーザ名2</p>
+							<p>ユーザ名3</p>
+					</div>
+					<div class="center-align">
+					<a class="waves-effect waves-teal btn-flat white-text">invite</a>
+					</div>
+ -->				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- RightColum -->
+	<div class="col s10">
+		<div class="row">
+	#{if flash.error}
+    	<p class="error" style="display:none">${flash.error}</p>
+	#{/if}
+			<form class="row" action="@{Application.submit()}">
+				<div class="input-field">
+					<input id="share_url" type="text" class="validate" name="inputUrl">
+					<label for="share_url">URLを共有</label>
+				</div>
+				<div class="row">
+					<button class="btn waves-effect waves-light" type="submit" name="action">投稿</button>
+				</div>
+			</form>
+		</div>
+
+<!-- Card View -->
+		#{list items:articles, as:'article'}
+			<div class="card small hoverable">
+				<div class="card-image left">
+				<a class="view_link" href="${article.url}" target="_blank" data-id="${article.id}">
+					<img src="${article.imageUrl}">
+				</a>
+				</div>
+				<div class="card-content">
+					<a href="${article.url}" target="_blank"><span class="card-title black-text">${article.title}</span></a>
+					<p class="card-description">${article.description}</p>
+				</div>
+				<div class="card-action">
+					<div class="col s2">
+						<div class="left"><i class="material-icons small">visibility</i></div>
+						<span class="count view" data-id="${article.id}">${article.view}</span>
+					</div>
+					<div class="col s2">
+					<form action="@{Application.liked()}">
+						<button class="black-text liked left" type="post"><i class="material-icons small">thumb_up</i></button>
+					</form>
+						<!-- <a href="@{Application.liked()}" class="black-text liked"><i class="material-icons small">thumb_up</i></a> -->
+						<!-- <p class="count">${article.liked}</p> -->
+						<span class="count liked" data-id="${article.id}">${article.liked}</span>
+					</div>
+					<div class="col s2">
+						<a href="@{Application.deletePost}" class="black-text"><i class="material-icons small">delete</i></a>
+					</div>
+				</div>
+			</div>
+		#{/list} 
+	</div> <!-- Right Colum -->
+</div> <!-- Parent View -->

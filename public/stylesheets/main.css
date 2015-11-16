@@ -1,0 +1,49 @@
+.card.small {
+	height: 280px;
+}
+.card.small .card-image{
+	height: 200px;
+	width: 360px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.card.small .card-content {
+	height: 180px;
+}
+
+.card-content .card-description {
+	padding-top: 20px;
+	font-size: 18px;
+	line-height: 34px;
+}
+
+.card .card-content .card-title {
+	line-height: 32px;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.card .card-action {
+	padding:5px;
+}
+
+.card .card-action .count {
+	margin:0;
+}
+
+i.left {
+	margin-right: 5px;
+}
+
+.count {
+	font-size: 1.5rem;
+}
+.card .card-action .liked {
+	margin:0;
+	padding:0;
+	font-size: none;
+	background: none;
+	color: none;
+	border-style: none;
+}
