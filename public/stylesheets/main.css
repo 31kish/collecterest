@@ -39,11 +39,19 @@ i.left {
 .count {
 	font-size: 1.5rem;
 }
-.card .card-action .liked {
+.card .card-action .liked_button {
 	margin:0;
 	padding:0;
 	font-size: none;
 	background: none;
+	color: none;
+	border-style: none;
+}
+.card .card-action .delete_button {
+	margin:0;
+	padding:0;
+	font-size: none;
+	background:none;
 	color: none;
 	border-style: none;
 }

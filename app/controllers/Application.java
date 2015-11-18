@@ -15,62 +15,80 @@ import models.*;
 
 public class Application extends Controller {
 
-    public static void index() {
+	public static void index() {
 
-    	List<Article> articles = Article.find("order by id desc").fetch();
-        render(articles);
-    }
+		List<Article> articles = Article.find("order by id desc").fetch();
+		render(articles);
+	}
 
-    public static void submit(String inputUrl) {
-    	Article article = new Article();
-    	article.url = inputUrl;
+	public static void submit(String inputUrl) {
+		Article article = new Article();
+		article.url = inputUrl;
+		article.isBlackList = checkDomain(article.url);
 
-    	try {
-			HtmlParser.parse(article);
-	    	if(!article.url.isEmpty()) {
-	    		article.save();
-	    	}
-		} catch (Exception e) {
-			e.printStackTrace();
-			flash.error("URLが不正です");
+		if (article.url.isEmpty()) {
+			flash.error("URLが入力されていません。");
 		}
-
+		else if (article.isBlackList) {
+			flash.error("ブラックリスト");
+		}
+		else {
+			try {
+				HtmlParser.parse(article);
+				if(article.imageUrl.isEmpty()) {
+					article.imageUrl = "/public/images/no_image.png";
+				}
+				article.save();
+			} catch (Exception e) {
+				e.printStackTrace();
+				flash.error("URLが不正です。");
+			}
+		}
 		List<Article> articles = article.find("order by id desc").fetch();
 		renderTemplate("Application/index.html",articles);
 
-    }
+	}
 
-    public static void liked(Long articleID) {
-    	Article article = Article.findById(articleID);
+	public static void liked(Long articleID) {
+		Article article = Article.findById(articleID);
 
-    	article.liked++;
-    	article.save();
+		article.liked++;
+		article.save();
 
-    	renderText(article.liked);
-    }
+		renderText(article.liked);
+	}
 
-    public static void view(Long articleID) {
-    	Article article = Article.findById(articleID);
+	public static void view(Long articleID) {
+		Article article = Article.findById(articleID);
 
-    	article.view++;
-    	article.save();
+		article.view++;
+		article.save();
 
-    	renderText(article.view);
-    }
+		renderText(article.view);
+	}
 
-    public static void deletePost(Long articleID) {
-    	//TODO
-    	//記事IDを受け取り、その記事を削除する
-    	//削除して更新したArticlesを渡す
+	public static void deletePost(Long articleID) {
+		Article article = Article.findById(articleID);
+		article.findById(articleID)._delete();
 
-    	Article article = Article.findById(articleID);
+		List<Article> articles = Article.find("order by id desc").fetch();
+		renderTemplate("Application/index.html",articles);
+	}
 
-//    	article.delete(query, params);
-//    	Article.deleteAll();//ためしに全部消してみた
+	public static boolean checkDomain(String url) {
+		//TODO
+		//パターンファイルみたいなので管理したい
+		//ドメイン名で判断する
+		//fc2はサブディレクトリなのでどうにかする
 
-    	System.out.println("DeletePost");
-
-    	List<Article> articles = Article.find("order by id desc").fetch();
-    	renderTemplate("Application/index.html",articles);
-    }
+		if (url.matches(".*"+"xvideos"+".*")) {
+			return true;
+		}
+		else if (url.matches(".*"+"video.fc2.com/a/"+".*")) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }
