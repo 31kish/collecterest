@@ -17,8 +17,15 @@ public class Application extends Controller {
 
 	public static void index() {
 
+//		List<Article> articles = Article.find("order by id desc").fetch();
+//		render(articles);
+
+		renderTemplate("Application/welcome.html");
+	}
+
+	public static void top() {
 		List<Article> articles = Article.find("order by id desc").fetch();
-		render(articles);
+		renderTemplate("Application/index.html",articles);
 	}
 
 	public static void submit(String inputUrl) {

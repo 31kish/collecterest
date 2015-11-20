@@ -24,7 +24,6 @@ import com.mchange.v2.cfg.PropertiesConfigSource.Parse;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class HtmlParser {
-	public static boolean isAdult;
 
 	public static Article parse(Article article) throws IOException, Exception {
 
@@ -67,17 +66,19 @@ public class HtmlParser {
 						title = string;
 						title = title.replace("<title>", "");
 						title = title.replace("</title>", "");
-						//						System.out.println("見つけた"+title);
+//						System.out.println("見つけた"+title);
 					}
 					else if (string.matches(".*"+"description"+".*") && desc.isEmpty()) {
 						desc = string;
 						desc = desc.replaceAll("\"", "");
-						desc = desc.replace("<meta name=description content=", "");
+						desc = desc.replace("<meta ", "");
+						desc = desc.replace("name=description", "");
+						desc = desc.replace("content=", "");
 						desc = desc.replace("/>", "");
 //						System.out.println("見つけた:"+desc);
 					}
 					else if (string.matches("<img src") && image.isEmpty()) {
-						//						System.out.println(string);
+//						System.out.println(string);
 					}
 				}
 				writer.close();
