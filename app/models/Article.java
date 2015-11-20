@@ -13,6 +13,7 @@ public class Article extends Model {
 	public Integer view;
 	public Integer liked;
 	public Integer favorite;
+	public boolean isBlackList;
 
 	public Article() {
 		view = 0;
