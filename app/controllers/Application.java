@@ -15,12 +15,27 @@ import models.*;
 
 public class Application extends Controller {
 
+	public static boolean isConnected() {
+		return session.contains("userId");
+	}
+
 	public static void index() {
 
-//		List<Article> articles = Article.find("order by id desc").fetch();
-//		render(articles);
+		final String FACEBOOK_AUTH_URL ="https://www.facebook.com/dialog/oauth?client_id=";
+		final String CLIENT_ID = "816412851817516";
+		final String REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
+		final String RESPONSE_TYPE = "code";
+		String url = FACEBOOK_AUTH_URL + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
+					+ "&response_type=" + RESPONSE_TYPE;
 
-		renderTemplate("Application/welcome.html");
+		User user = null;
+		if (isConnected()) {
+			System.out.println(session.get("userId"));
+			user = User.findById(session.get("userId"));
+		}
+//		System.out.println(user.id);
+
+		renderTemplate("Application/welcome.html",url,user);
 	}
 
 	public static void top() {

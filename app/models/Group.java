@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.persistence.OneToMany;
 
-public class Group {
+import play.db.jpa.Model;
+
+public class Group extends Model {
 
 	public String gourpName;
 
@@ -17,6 +19,6 @@ public class Group {
 	public Group(String groupName) {
 		this.gourpName = groupName;
 
-		userList = new ArrayList<>();
+//		userList = new ArrayList<>();
 	}
 }
