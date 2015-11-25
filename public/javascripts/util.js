@@ -66,3 +66,6 @@ $(function() {
   });
 
 });
+function askSignup() {
+  window.open('/signup', 'subwin', 'width=480,height=680');
+}

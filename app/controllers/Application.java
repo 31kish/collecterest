@@ -7,6 +7,7 @@ import play.mvc.results.RenderText;
 import java.io.IOException;
 import java.util.*;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.opengraph.OpenGraph;
 
 import com.sun.xml.internal.bind.v2.model.core.ID;
@@ -17,6 +18,17 @@ public class Application extends Controller {
 
 	public static boolean isConnected() {
 		return session.contains("userId");
+	}
+
+	public static void welcome() {
+		//ログインしていればindex
+		//していなければwelcome
+		if(isConnected()) {
+			index();
+		}
+		else {
+			renderTemplate("Application/welcome.html");
+		}
 	}
 
 	public static void index() {
@@ -30,17 +42,27 @@ public class Application extends Controller {
 
 		User user = null;
 		if (isConnected()) {
-			System.out.println(session.get("userId"));
 			user = User.findById(session.get("userId"));
 		}
-//		System.out.println(user.id);
 
-		renderTemplate("Application/welcome.html",url,user);
+		//TODO:現在のウィンドウを閉じる。
+		//元のウィンドウにレンダリングする
+//		String html = "<script type=\"text/javascript\">function closewin(){window.close('about:blank','_self');}</script>";
+//		renderHtml(html);
+		renderTemplate("Application/index.html",url,user);
+
 	}
 
-	public static void top() {
-		List<Article> articles = Article.find("order by id desc").fetch();
-		renderTemplate("Application/index.html",articles);
+	public static void signup() {
+
+		final String FACEBOOK_AUTH_URL ="https://www.facebook.com/dialog/oauth?client_id=";
+		final String CLIENT_ID = "816412851817516";
+		final String REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
+		final String RESPONSE_TYPE = "code";
+		String url = FACEBOOK_AUTH_URL + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
+					+ "&response_type=" + RESPONSE_TYPE;
+
+		renderTemplate("Application/signup.html",url);
 	}
 
 	public static void submit(String inputUrl) {
@@ -113,4 +135,5 @@ public class Application extends Controller {
 			return false;
 		}
 	}
+
 }

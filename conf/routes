@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                                       Application.index
+GET     /                                       Application.welcome
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -13,6 +13,7 @@ GET     /public/                                staticDir:public
 POST	/view									Application.view
 POST	/liked									Application.liked
 POST	/delete									Application.deletePost
+GET	/signup									Application.signup
 *		/loginViaFacebook						Login.loginViaFacebook
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

@@ -1,3 +1,4 @@
+/* index.html */
 .card.small {
 	height: 280px;
 }
@@ -55,3 +56,60 @@ i.left {
 	color: none;
 	border-style: none;
 }
+/* index.html end */
+
+/******************/
+
+/* welcome.html */
+.top-headline {
+	margin-top: 15px;
+}
+
+.promo-contents {
+	margin-top: 100px;
+	margin-bottom: 50px;
+}
+/* welcome.html end */
+
+/******************/
+
+/* signup.html */
+.signup-message {
+	margin-top: 50px;
+}
+.signup-components {
+	margin-top: 80px;
+}
+.signup-list {
+	font-size: 24px;
+	margin-top: 15px;
+	margin-bottom: 5px;
+}
+.btn-facebook {
+	background-color: #3b5998;
+	height: 45px;
+	display: inline-block;
+	position: relative;
+	text-decoration: none;
+	border-radius: 4px;
+}
+.btn-facebook:after {
+	content: "";
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	width: 30px;
+	height: 30px;
+	background-image: url(/public/images/fb_logo_white.png);
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+.label-facebook {
+	color: #ffffff;
+	position: relative;
+	top: 7px;
+	margin: 0 20px 0 50px;
+}
+/* signup.html End */
+
+/******************/

@@ -10,7 +10,10 @@
 			<div class="left_colum col s2">
 				<div class="row card-panel teal lighten-3">
 					<div class="row center-align">
-						<span class="white-text">ユーザ名</span>
+						#{if user}
+						<img src="${user.iconUrl}">
+						<span class="white-text">${user.name}</span>
+						#{/if}
 						<!-- <a class="waves-effect waves-teal btn-flat white-text" href="https://www.facebook.com/dialog/oauth?client_id=816412851817516&redirect_uri=http://localhost:9000/&state=SOME_ARBITRARY_BUT_UNIQUE_STRING">ログイン</a> -->
 					</div>
  					<div class="row white-text">
