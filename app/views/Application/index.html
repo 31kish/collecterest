@@ -9,28 +9,27 @@
 		<div class="nav-wrapper">
 			<div class="left_colum col s2">
 				<div class="row card-panel teal lighten-3">
-					<div class="row center-align">
+					<div class="row center-align user-contents">
 						#{if user}
-						<img src="${user.iconUrl}">
-						<span class="white-text">${user.name}</span>
+							<img src="${user.iconUrl}" class="user-icon">
+							<span class="white-text user-name">${user.name}</span><br>
 						#{/if}
-						<!-- <a class="waves-effect waves-teal btn-flat white-text" href="https://www.facebook.com/dialog/oauth?client_id=816412851817516&redirect_uri=http://localhost:9000/&state=SOME_ARBITRARY_BUT_UNIQUE_STRING">ログイン</a> -->
 					</div>
  					<div class="row white-text">
 						<div class="divider"></div>
 						<div class="section">
-							<span>グループ</span>
+							<span>グループ名</span>
 						</div>
 						<div class="divider"></div>
 							<p>ユーザ名1</p>
 							<p>ユーザ名2</p>
 							<p>ユーザ名3</p>
 					</div>
-					<div class="center-align">
-					<a class="waves-effect waves-teal btn-flat white-text">invite</a>
-					</div>
+					<div class="divider"></div>
+					<!-- <a class="waves-effect waves-teal btn-flat white-text">invite</a> -->
+					<a class="white-text user-btn-logout" href="#" onclick="logout(); return false;">Logout</a>
 			</div>
-			</div>
+		</div> <!-- Left Colum end -->
 		</div>
 	</div>
 </div>

@@ -1,0 +1,11 @@
+#{extends 'main.html' /}
+#{set title:'signup in Collecterest' /}
+
+#{if isConnected}
+<script type="text/javascript">
+window.opener.location.reload();
+window.close();
+</script>
+This tab should close automatically. If not, please type DOMAIN_NAME in the URL bar.
+
+#{/if}

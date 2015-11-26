@@ -5,15 +5,8 @@
     <div class="navbar-fixed">
       <div class="nav-wrapper">
         <div class="row card-panel teal lighten-3 white-text center-align">
-          <!-- <a class="waves-effect waves-white lighten-5 btn-flat white-text" href="${url}">ログイン</a> -->
-          <a class="waves-effect waves-white lighten-5 btn-flat white-text" href="#" onclick="askSignup();">ログイン</a>
+          <a class="waves-effect waves-white lighten-5 btn-flat white-text" href="#" onclick="askSignup(); return false;">ログイン</a>
         </div>
-        #{if user}
-        <div class="row card-panel teal lighten-3 white-text cernter-align">
-          こんにちは ${user.name} さん
-          <img src="${user.iconUrl}">
-        </div>
-        #{/if}
       </div>
     </div>
   </div> <!-- nav end -->

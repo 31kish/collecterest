@@ -1,5 +1,6 @@
 package controllers;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import play.*;
 import play.mvc.*;
 import play.mvc.results.RenderText;
@@ -21,8 +22,6 @@ public class Application extends Controller {
 	}
 
 	public static void welcome() {
-		//ログインしていればindex
-		//していなければwelcome
 		if(isConnected()) {
 			index();
 		}
@@ -32,25 +31,16 @@ public class Application extends Controller {
 	}
 
 	public static void index() {
-
-		final String FACEBOOK_AUTH_URL ="https://www.facebook.com/dialog/oauth?client_id=";
-		final String CLIENT_ID = "816412851817516";
-		final String REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
-		final String RESPONSE_TYPE = "code";
-		String url = FACEBOOK_AUTH_URL + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
-					+ "&response_type=" + RESPONSE_TYPE;
+		//TODO:Articlesがない
 
 		User user = null;
 		if (isConnected()) {
 			user = User.findById(session.get("userId"));
+			renderTemplate("Application/index.html",user);
 		}
-
-		//TODO:現在のウィンドウを閉じる。
-		//元のウィンドウにレンダリングする
-//		String html = "<script type=\"text/javascript\">function closewin(){window.close('about:blank','_self');}</script>";
-//		renderHtml(html);
-		renderTemplate("Application/index.html",url,user);
-
+		else {
+			welcome();
+		}
 	}
 
 	public static void signup() {
@@ -62,10 +52,25 @@ public class Application extends Controller {
 		String url = FACEBOOK_AUTH_URL + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
 					+ "&response_type=" + RESPONSE_TYPE;
 
-		renderTemplate("Application/signup.html",url);
+		User user = null;
+		if (isConnected()) {
+			user = User.findById(session.get("userId"));
+			index();
+		}
+		else {
+			renderTemplate("Application/signup.html",url);
+		}
+	}
+
+	public static void loginSucceed() {
+		boolean isConnected = isConnected();
+		if (isConnected) {
+			renderTemplate("Application/loginsucceed.html",isConnected);
+		}
 	}
 
 	public static void submit(String inputUrl) {
+		//TODO:renderTemplateのせいでuserがない
 		Article article = new Article();
 		article.url = inputUrl;
 		article.isBlackList = checkDomain(article.url);

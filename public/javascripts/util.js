@@ -69,3 +69,12 @@ $(function() {
 function askSignup() {
   window.open('/signup', 'subwin', 'width=480,height=680');
 }
+
+function close_func() {
+  window.opener.location.reload();
+  window.close();
+}
+
+function logout() {
+  location.href = "/logout";
+}

@@ -56,6 +56,23 @@ i.left {
 	color: none;
 	border-style: none;
 }
+
+.user-contents {
+
+}
+.user-icon {
+	width: 100px;
+	height: 100px;
+	display: block;
+	margin: 10px auto;
+}
+.user-name {
+}
+.user-btn-logout {
+	font-size: 14px;
+	float: left;
+	margin-top: 15px;
+}
 /* index.html end */
 
 /******************/

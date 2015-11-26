@@ -67,7 +67,8 @@ public class Login extends Controller {
 				connection.disconnect();
 			}
 		}
-		Application.index();
+//		Application.index();
+		Application.loginSucceed();
 	}
 
 	private static void login(String accessToken) {
