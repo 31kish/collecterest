@@ -31,12 +31,12 @@ public class Application extends Controller {
 	}
 
 	public static void index() {
-		//TODO:Articlesがない
 
 		User user = null;
 		if (isConnected()) {
 			user = User.findById(session.get("userId"));
-			renderTemplate("Application/index.html",user);
+			List<Article> articles = Article.find("order by id desc").fetch();
+			renderTemplate("Application/index.html",user,articles);
 		}
 		else {
 			welcome();
@@ -52,9 +52,9 @@ public class Application extends Controller {
 		String url = FACEBOOK_AUTH_URL + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
 					+ "&response_type=" + RESPONSE_TYPE;
 
-		User user = null;
+//		User user = null;
 		if (isConnected()) {
-			user = User.findById(session.get("userId"));
+//			user = User.findById(session.get("userId"));
 			index();
 		}
 		else {
@@ -70,7 +70,6 @@ public class Application extends Controller {
 	}
 
 	public static void submit(String inputUrl) {
-		//TODO:renderTemplateのせいでuserがない
 		Article article = new Article();
 		article.url = inputUrl;
 		article.isBlackList = checkDomain(article.url);
@@ -93,9 +92,9 @@ public class Application extends Controller {
 				flash.error("URLが不正です。");
 			}
 		}
-		List<Article> articles = article.find("order by id desc").fetch();
-		renderTemplate("Application/index.html",articles);
-
+//		List<Article> articles = article.find("order by id desc").fetch();
+//		renderTemplate("Application/index.html",articles);
+		index();
 	}
 
 	public static void liked(Long articleID) {
@@ -120,12 +119,13 @@ public class Application extends Controller {
 		Article article = Article.findById(articleID);
 		article.findById(articleID)._delete();
 
-		List<Article> articles = Article.find("order by id desc").fetch();
-		renderTemplate("Application/index.html",articles);
+		index();
+//		List<Article> articles = Article.find("order by id desc").fetch();
+//		renderTemplate("Application/index.html",articles);
 	}
 
 	public static boolean checkDomain(String url) {
-		//TODO
+		//TODO:ドメインチェック
 		//パターンファイルみたいなので管理したい
 		//ドメイン名で判断する
 		//fc2はサブディレクトリなのでどうにかする
@@ -133,7 +133,7 @@ public class Application extends Controller {
 		if (url.matches(".*"+"xvideos"+".*")) {
 			return true;
 		}
-		else if (url.matches(".*"+"video.fc2.com/a/"+".*")) {
+		else if (url.matches(".*"+"video.fc2.com"+".*")) {
 			return true;
 		}
 		else {
