@@ -16,7 +16,9 @@ POST	/delete									Application.deletePost
 *		/signup									Application.signup
 *		/index									Application.index
 *		/loginViaFacebook						Login.loginViaFacebook
+*		/loginViaTwitter						Login.loginViaTwitter
 *		/logout									Login.logout
+*		/twitterCallback						Login.twitterCallback
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

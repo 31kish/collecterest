@@ -7,10 +7,13 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import models.User;
 import models.facebook.FacebookUserObject;
 import models.facebook.UserFacebookInfo;
+import models.twitter.LoginForTwitter;
+import models.twitter.TwitterUserObject;
 import play.mvc.Controller;
 
 import com.google.gson.Gson;
@@ -71,6 +74,39 @@ public class Login extends Controller {
 		Application.loginSucceed();
 	}
 
+	public static void loginViaTwitter() {
+		LoginForTwitter twitter = new LoginForTwitter();
+//		redirect(twitter.request());
+
+		HashMap<String, String> token = twitter.requestAuthorize();
+		String url = token.get("authorizeUrl");
+		redirect(url);
+	}
+
+	public static void twitterCallback(String oauth_token, String oauth_verifier) {
+
+		System.out.println("Im home:D token:" + oauth_token + "\n verifier:" +oauth_verifier);
+
+		LoginForTwitter twitter = new LoginForTwitter();
+		HashMap<String, String> userInfo = twitter.requestAccessToken(oauth_token,oauth_verifier);
+//		params.put("oautu_token" oauth_token);
+		System.out.println("COME!!! " + userInfo);
+	}
+
+	//TODO:使ってない
+	private static void loginForTwitter(HashMap<String, String> userInfo) {
+		session.put("oauth_token", userInfo.get("oauth_token"));
+
+		final String USER_SHOW_URL = "https://api.twitter.com/1.1/users/show.json";
+		String url = USER_SHOW_URL + "?" + "screen_name=" + userInfo.get("screen_name");
+		System.out.println(url);
+
+		String json = getJson(USER_SHOW_URL + "?screen_name=" + userInfo.get("screen_name"));
+//		System.out.println(json);
+		TwitterUserObject twObject = new Gson().fromJson(json, TwitterUserObject.class);
+//		System.out.println(twObject);
+	}
+
 	private static void login(String accessToken) {
 		//セッションにプットする（ことで毎回のリクエストに利用可能にする）
 		session.put("access_token", accessToken);
@@ -85,7 +121,7 @@ public class Login extends Controller {
 		System.out.println("image: "+fbObject.picture.data.url);
 
 		if(!session.contains("userId") || (fbObject != null && fbObject.id != null && fbObject.id.equals(""))){
-			//もしユーザーのfacebook情報が見つからなかったrあアカウントを作成する
+			//もしユーザーのfacebook情報が見つからなかったらアカウントを作成する
 			UserFacebookInfo facebookInfo = UserFacebookInfo.findbyFacebookId(fbObject.id);
 			if(facebookInfo == null) {
 				User user = new User();

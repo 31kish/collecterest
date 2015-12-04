@@ -22,6 +22,8 @@ public class User extends Model {
 	public static User findById(String userId) {
 		return User.findById(Long.parseLong(userId));
 	}
+
+	public Article postedArticle;
 //	@ManyToOne
 //	public String author;
 

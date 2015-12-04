@@ -1,19 +1,20 @@
 package controllers;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import play.*;
-import play.mvc.*;
-import play.mvc.results.RenderText;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import java.io.IOException;
-import java.util.*;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-import org.opengraph.OpenGraph;
-
-import com.sun.xml.internal.bind.v2.model.core.ID;
-
-import models.*;
+import models.Article;
+import models.HtmlParser;
+import models.User;
+import play.mvc.Controller;
+import sun.misc.BASE64Encoder;
 
 public class Application extends Controller {
 
@@ -35,7 +36,8 @@ public class Application extends Controller {
 		User user = null;
 		if (isConnected()) {
 			user = User.findById(session.get("userId"));
-			List<Article> articles = Article.find("order by id desc").fetch();
+			List<Article> articles = user.postedArticle.find("order by id desc").fetch();
+//			List<Article> articles = Article.find("order by id desc").fetch();
 			renderTemplate("Application/index.html",user,articles);
 		}
 		else {
@@ -43,24 +45,36 @@ public class Application extends Controller {
 		}
 	}
 
-	public static void signup() {
+	public static void signup() throws Exception {
 
-		final String FACEBOOK_AUTH_URL ="https://www.facebook.com/dialog/oauth?client_id=";
-		final String CLIENT_ID = "816412851817516";
-		final String REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
-		final String RESPONSE_TYPE = "code";
-		String url = FACEBOOK_AUTH_URL + CLIENT_ID + "&redirect_uri=" + REDIRECT_URI
-					+ "&response_type=" + RESPONSE_TYPE;
+		final String fbUrl = getFbUrl();
+		final String twUrl = getTwUrl();
 
-//		User user = null;
 		if (isConnected()) {
-//			user = User.findById(session.get("userId"));
 			index();
 		}
 		else {
-			renderTemplate("Application/signup.html",url);
+			renderTemplate("Application/signup.html",fbUrl,twUrl);
 		}
 	}
+
+	public static String getFbUrl() {
+
+		final String FB_AUTH_URL ="https://www.facebook.com/dialog/oauth?client_id=";
+		final String FB_CLIENT_ID = "816412851817516";
+		final String FB_REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
+		final String FB_RESPONSE_TYPE = "code";
+		String fbUrl = FB_AUTH_URL + FB_CLIENT_ID + "&redirect_uri=" + FB_REDIRECT_URI
+					+ "&response_type=" + FB_RESPONSE_TYPE;
+		return fbUrl;
+	}
+
+	public static String getTwUrl() {
+//		String twUrl = "http://localhost:9000/LoginForTwitter";
+		String twUrl = "http://localhost:9000/loginViaTwitter";
+		return twUrl;
+	}
+
 
 	public static void loginSucceed() {
 		boolean isConnected = isConnected();
@@ -69,6 +83,37 @@ public class Application extends Controller {
 		}
 	}
 
+	public static void submit(String inputUrl) {
+		if(inputUrl.isEmpty()) {
+			flash.error("URLが入力されていません。");
+			index();
+			return;
+		}
+
+		User user = User.findById(session.get("userId"));
+		user.postedArticle = new Article();
+		user.postedArticle.url = inputUrl;
+		user.postedArticle.isBlackList = checkDomain(user.postedArticle.url);
+
+		if(user.postedArticle.isBlackList) {
+			flash.error("不正なURLです。（ブラックリスト）");
+			index();
+			return;
+		}
+
+		try {
+			HtmlParser.parse(user.postedArticle);
+			if(user.postedArticle.imageUrl.isEmpty()) {
+				user.postedArticle.imageUrl = "/public/images/no_image.png";
+			}
+			user.postedArticle.save();
+		} catch (Exception e) {
+			e.printStackTrace();
+			flash.error("URLが不正です。");
+		}
+		index();
+	}
+	/*
 	public static void submit(String inputUrl) {
 		Article article = new Article();
 		article.url = inputUrl;
@@ -92,11 +137,12 @@ public class Application extends Controller {
 				flash.error("URLが不正です。");
 			}
 		}
-//		List<Article> articles = article.find("order by id desc").fetch();
-//		renderTemplate("Application/index.html",articles);
+
+		List<Article> articles = article.find("order by id desc").fetch();
+		renderTemplate("Application/index.html",articles);
 		index();
 	}
-
+*/
 	public static void liked(Long articleID) {
 		Article article = Article.findById(articleID);
 
