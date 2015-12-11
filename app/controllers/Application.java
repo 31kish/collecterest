@@ -1,20 +1,11 @@
 package controllers;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 import models.Article;
 import models.HtmlParser;
 import models.User;
 import play.mvc.Controller;
-import sun.misc.BASE64Encoder;
 
 public class Application extends Controller {
 

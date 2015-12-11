@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 import models.User;
 import models.facebook.FacebookUserObject;
+import models.facebook.LoginForFacebook;
 import models.facebook.UserFacebookInfo;
 import models.twitter.LoginForTwitter;
 import models.twitter.TwitterUserObject;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 
 public class Login extends Controller {
 
+	/*
 	public static void loginViaFacebook(String code) {
 		System.out.println("return code = "+ code);
 
@@ -73,14 +75,26 @@ public class Login extends Controller {
 //		Application.index();
 		Application.loginSucceed();
 	}
+*/
+
+	public static void loginViaFacebook(String code) {
+		LoginForFacebook facebook = new LoginForFacebook();
+		HashMap<String, String> fbHashMap = facebook.request(code);
+		String token = fbHashMap.get("access_token");
+		login_fb(token);
+		Application.loginSucceed();
+	}
 
 	public static void loginViaTwitter() {
 		LoginForTwitter twitter = new LoginForTwitter();
+		String redirectStr = twitter.requestAuthorize();
 //		redirect(twitter.request());
 
-		HashMap<String, String> token = twitter.requestAuthorize();
-		String url = token.get("authorizeUrl");
-		redirect(url);
+//		HashMap<String, String> token = twitter.requestAuthorize();
+//		String url = token.get("authorizeUrl");
+//		redirect(url);
+
+		redirect(redirectStr);
 	}
 
 	public static void twitterCallback(String oauth_token, String oauth_verifier) {
@@ -88,9 +102,10 @@ public class Login extends Controller {
 		System.out.println("Im home:D token:" + oauth_token + "\n verifier:" +oauth_verifier);
 
 		LoginForTwitter twitter = new LoginForTwitter();
-		HashMap<String, String> userInfo = twitter.requestAccessToken(oauth_token,oauth_verifier);
+		twitter.requestAccessToken(oauth_token, oauth_verifier);
+//		HashMap<String, String> userInfo = twitter.requestAccessToken(oauth_token,oauth_verifier);
 //		params.put("oautu_token" oauth_token);
-		System.out.println("COME!!! " + userInfo);
+//		System.out.println("COME!!! " + userInfo);
 	}
 
 	//TODO:使ってない
@@ -107,7 +122,11 @@ public class Login extends Controller {
 //		System.out.println(twObject);
 	}
 
-	private static void login(String accessToken) {
+	private static void login_tw(String oauthToken) {
+
+	}
+
+	private static void login_fb(String accessToken) {
 		//セッションにプットする（ことで毎回のリクエストに利用可能にする）
 		session.put("access_token", accessToken);
 
@@ -140,7 +159,6 @@ public class Login extends Controller {
 				session.put("userId", facebookInfo.userId);
 			}
 		}
-
 	}
 
 	public static void logout() {
