@@ -26,12 +26,13 @@ public class Application extends Controller {
 
 		User user = null;
 		if (isConnected()) {
+			System.out.println("index");
 			user = User.findById(session.get("userId"));
 			List<Article> articles = user.postedArticle.find("order by id desc").fetch();
-//			List<Article> articles = Article.find("order by id desc").fetch();
 			renderTemplate("Application/index.html",user,articles);
 		}
 		else {
+			System.out.println("welcome");
 			welcome();
 		}
 	}
@@ -62,7 +63,7 @@ public class Application extends Controller {
 
 	public static String getTwUrl() {
 //		String twUrl = "http://localhost:9000/LoginForTwitter";
-		String twUrl = "http://localhost:9000/loginViaTwitter";
+		String twUrl = "http://127.0.0.1:9000/loginViaTwitter";
 		return twUrl;
 	}
 
@@ -104,36 +105,7 @@ public class Application extends Controller {
 		}
 		index();
 	}
-	/*
-	public static void submit(String inputUrl) {
-		Article article = new Article();
-		article.url = inputUrl;
-		article.isBlackList = checkDomain(article.url);
 
-		if (article.url.isEmpty()) {
-			flash.error("URLが入力されていません。");
-		}
-		else if (article.isBlackList) {
-			flash.error("ブラックリスト");
-		}
-		else {
-			try {
-				HtmlParser.parse(article);
-				if(article.imageUrl.isEmpty()) {
-					article.imageUrl = "/public/images/no_image.png";
-				}
-				article.save();
-			} catch (Exception e) {
-				e.printStackTrace();
-				flash.error("URLが不正です。");
-			}
-		}
-
-		List<Article> articles = article.find("order by id desc").fetch();
-		renderTemplate("Application/index.html",articles);
-		index();
-	}
-*/
 	public static void liked(Long articleID) {
 		Article article = Article.findById(articleID);
 
@@ -155,10 +127,7 @@ public class Application extends Controller {
 	public static void deletePost(Long articleID) {
 		Article article = Article.findById(articleID);
 		article.findById(articleID)._delete();
-
 		index();
-//		List<Article> articles = Article.find("order by id desc").fetch();
-//		renderTemplate("Application/index.html",articles);
 	}
 
 	public static boolean checkDomain(String url) {

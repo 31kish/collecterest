@@ -15,67 +15,13 @@ import models.facebook.LoginForFacebook;
 import models.facebook.UserFacebookInfo;
 import models.twitter.LoginForTwitter;
 import models.twitter.TwitterUserObject;
+import models.twitter.UserTwitterInfo;
 import play.mvc.Controller;
 
 import com.google.gson.Gson;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 
 public class Login extends Controller {
-
-	/*
-	public static void loginViaFacebook(String code) {
-		System.out.println("return code = "+ code);
-
-		final String FACEBOOK_AUTH_URL = "https://graph.facebook.com/oauth/access_token?";
-		final String APP_ID = "816412851817516";
-		final String REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
-		final String CLIENT_SECRET = "fbaadbcc3e2dc4ae563dc66c18baba40";
-
-		String url_string = FACEBOOK_AUTH_URL + "&client_id=" + APP_ID
-				+ "&redirect_uri=" + REDIRECT_URI + "&client_secret="
-				+ CLIENT_SECRET + "&code=" + code;
-
-		System.out.println("url string = "+ url_string);
-
-		HttpURLConnection connection = null;
-		try {
-			URL url = new URL(url_string);
-
-			connection = (HttpURLConnection)url.openConnection();
-			connection.setRequestMethod("GET");
-
-			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				String responseBody = "";
-				try (InputStreamReader isr = new InputStreamReader(
-						connection.getInputStream(), StandardCharsets.UTF_8);
-						BufferedReader reader = new BufferedReader(isr)) {
-					String line;
-					while((line = reader.readLine()) != null) {
-						responseBody = responseBody + line;
-					}
-				}
-				System.out.println(responseBody);
-				String[] data = responseBody.split("&");
-				for(String string : data) {
-					String[] p = string.split("=");
-					if(p.length == 2 && p[0].equals("access_token")) {
-						login(p[1]);
-						System.out.println("access token is " + p[1]);
-					}
-				}
-			} else {
-				flash.error("ログインに失敗しました");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if(connection != null) {
-				connection.disconnect();
-			}
-		}
-//		Application.index();
-		Application.loginSucceed();
-	}
-*/
 
 	public static void loginViaFacebook(String code) {
 		LoginForFacebook facebook = new LoginForFacebook();
@@ -87,14 +33,11 @@ public class Login extends Controller {
 
 	public static void loginViaTwitter() {
 		LoginForTwitter twitter = new LoginForTwitter();
-		String redirectStr = twitter.requestAuthorize();
-//		redirect(twitter.request());
 
-//		HashMap<String, String> token = twitter.requestAuthorize();
-//		String url = token.get("authorizeUrl");
-//		redirect(url);
+		HashMap<String, String> token = twitter.requestAuthorize();
+		String redirectURL = twitter.AUTHORIZE_URL + "?oauth_token=" + token.get("oauth_token");
 
-		redirect(redirectStr);
+		redirect(redirectURL);
 	}
 
 	public static void twitterCallback(String oauth_token, String oauth_verifier) {
@@ -103,27 +46,50 @@ public class Login extends Controller {
 
 		LoginForTwitter twitter = new LoginForTwitter();
 		twitter.requestAccessToken(oauth_token, oauth_verifier);
-//		HashMap<String, String> userInfo = twitter.requestAccessToken(oauth_token,oauth_verifier);
-//		params.put("oautu_token" oauth_token);
-//		System.out.println("COME!!! " + userInfo);
+
+		login_tw(oauth_token);
+		Application.loginSucceed();
 	}
 
-	//TODO:使ってない
-	private static void loginForTwitter(HashMap<String, String> userInfo) {
-		session.put("oauth_token", userInfo.get("oauth_token"));
+	private static void login_tw(String oauth_token) {
+		session.put("oauth_token", oauth_token);
 
-		final String USER_SHOW_URL = "https://api.twitter.com/1.1/users/show.json";
-		String url = USER_SHOW_URL + "?" + "screen_name=" + userInfo.get("screen_name");
-		System.out.println(url);
-
-		String json = getJson(USER_SHOW_URL + "?screen_name=" + userInfo.get("screen_name"));
-//		System.out.println(json);
+		LoginForTwitter twitter = new LoginForTwitter();
+		String json = twitter.requestUserInfo();
 		TwitterUserObject twObject = new Gson().fromJson(json, TwitterUserObject.class);
-//		System.out.println(twObject);
-	}
+		System.out.println("id : " + twObject.id);
+		System.out.println("screen_name : " + twObject.screen_name);
+		System.out.println("profile_image_url : " + twObject.profile_image_url);
 
-	private static void login_tw(String oauthToken) {
+		if(!session.contains("userId") || (twObject != null && twObject.id != null && twObject.id.equals(""))) {
+			//
+			System.out.println("ユーザーを作成");
+			UserTwitterInfo twitterInfo = UserTwitterInfo.findbyTwitterId(twObject.id);
+			if(twitterInfo == null) {
+				User user = new User();
+				UserTwitterInfo newTwitterInfo = new UserTwitterInfo();
+				user.name = twObject.screen_name;
+				user.iconUrl = twObject.profile_image_url;
+				user.save();
 
+				newTwitterInfo.userId = user.id;
+				newTwitterInfo.twitterId = twObject.id;
+				newTwitterInfo.name = twObject.screen_name;
+				newTwitterInfo.save();
+
+				session.put("userId", user.id);
+			}
+			else {
+				session.put("userId", twitterInfo.userId);
+			}
+		}
+		else {
+			System.out.println("else に入った");
+			System.out.println("session : " + session.contains("userId"));
+			System.out.println("twObject : " +twObject);
+			System.out.println("twObject.id : " + twObject.id);
+
+		}
 	}
 
 	private static void login_fb(String accessToken) {

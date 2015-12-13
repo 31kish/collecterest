@@ -24,22 +24,5 @@ public class User extends Model {
 	}
 
 	public Article postedArticle;
-//	@ManyToOne
-//	public String author;
 
-//	@OneToMany(mappedBy="posted_article", cascade=CascadeType.ALL)
-//	public List<Article> postedArticles;
-
-//	@OneToMany
-//	public List<Group> groupList;
-
-//	@OneToMany
-//	public List<Archive> archivedArticleList;
-
-//	public User(String author, String archivedArticleID) {
-//		this.author = author;
-//		this.groupList = new ArrayList<Group>();
-//		this.archivedArticleList = new ArrayList<Archive>();
-//		this.postedArticles = new ArrayList<Article>();
-//	}
 }

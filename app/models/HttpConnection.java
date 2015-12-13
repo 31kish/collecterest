@@ -17,7 +17,7 @@ public class HttpConnection {
 
 	private String responseBody;
 
-	public void connect(String url, String method, String property, String parameter) {
+	public void connect(String url, String method, String property) {
 
 		HttpURLConnection connection = null;
 		try {
@@ -27,16 +27,9 @@ public class HttpConnection {
 			if(property != null) {
 				connection.setRequestProperty("Authorization", property);
 			}
-			if(parameter != null) {
-				connection.setDoOutput(true);
-				String queryParam = new String("screen_name=" + parameter);
-				PrintStream ps = new PrintStream(connection.getOutputStream());
-				ps.print(queryParam);
-				ps.close();
-			}
 
-			System.out.println("code : " + connection.getResponseCode() + "\nmes : " + connection.getResponseMessage());
-			System.out.println("header :" + connection.getHeaderFields());
+//			System.out.println("code : " + connection.getResponseCode() + "\nmes : " + connection.getResponseMessage());
+//			System.out.println("header :" + connection.getHeaderFields());
 
 			if(connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 				String responseBody = "";
@@ -82,6 +75,9 @@ public class HttpConnection {
 		return body;
 	}
 
+	public String getOriginResponseBody() {
+		return responseBody;
+	}
 	protected void setReponseBody(String body) {
 		responseBody = body;
 	}

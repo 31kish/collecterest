@@ -8,8 +8,6 @@ public class LoginForFacebook {
 
 	public HashMap<String, String> request(String code) {
 
-//		System.out.println("return code = "+ code);
-
 		final String FACEBOOK_AUTH_URL = "https://graph.facebook.com/oauth/access_token?";
 		final String APP_ID = "816412851817516";
 		final String REDIRECT_URI = "http://localhost:9000/loginViaFacebook";
@@ -19,10 +17,8 @@ public class LoginForFacebook {
 				+ "&redirect_uri=" + REDIRECT_URI + "&client_secret="
 				+ CLIENT_SECRET + "&code=" + code;
 
-//		System.out.println("url string = "+ url_string);
-
 		HttpConnection httpConnection = new HttpConnection();
-		httpConnection.connect(url_string, "GET", null, null);
+		httpConnection.connect(url_string, "GET", null);
 
 		return httpConnection.getResponseBody();
 	}
