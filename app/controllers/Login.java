@@ -63,7 +63,7 @@ public class Login extends Controller {
 
 		if(!session.contains("userId") || (twObject != null && twObject.id != null && twObject.id.equals(""))) {
 			//
-			System.out.println("ユーザーを作成");
+//			System.out.println("ユーザーを作成");
 			UserTwitterInfo twitterInfo = UserTwitterInfo.findbyTwitterId(twObject.id);
 			if(twitterInfo == null) {
 				User user = new User();
@@ -82,13 +82,6 @@ public class Login extends Controller {
 			else {
 				session.put("userId", twitterInfo.userId);
 			}
-		}
-		else {
-			System.out.println("else に入った");
-			System.out.println("session : " + session.contains("userId"));
-			System.out.println("twObject : " +twObject);
-			System.out.println("twObject.id : " + twObject.id);
-
 		}
 	}
 

@@ -25,7 +25,7 @@ import sun.misc.BASE64Encoder;
 
 public class LoginForTwitter {
 
-	public static final String AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize";
+	public static final String AUTHORIZE_URL = "https://api.twitter.com/oauth/authenticate";
 	private static final String REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token";
 	private static final String ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token";
 	private static final String CALLBACK_URL = "http://127.0.0.1:9000/twitterCallback";

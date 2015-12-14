@@ -109,6 +109,7 @@ i.left {
 }
 .btn-facebook {
 	background-color: #3b5998;
+	width: 300px;
 	height: 45px;
 	display: inline-block;
 	position: relative;
@@ -127,6 +128,32 @@ i.left {
 	background-size: 30px 30px;
 }
 .label-facebook {
+	color: #ffffff;
+	position: relative;
+	top: 7px;
+	margin: 0 20px 0 50px;
+}
+.btn-twitter {
+	background-color: #55acee;
+	width: 300px;
+	height: 45px;
+	display: inline-block;
+	position: relative;
+	text-decoration: none;
+	border-radius: 4px;
+}
+.btn-twitter:after {
+	content: "";
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	width: 30px;
+	height: 30px;
+	background-image: url(/public/images/tw_logo_white.png);
+	background-repeat: no-repeat;
+	background-size: 30px 30px;
+}
+.label-twitter {
 	color: #ffffff;
 	position: relative;
 	top: 7px;
