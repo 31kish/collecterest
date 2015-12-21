@@ -7,6 +7,7 @@
 	width: 360px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	max-height: 100%;
 }
 .card.small .card-image img {
 	top: 15px;
@@ -77,6 +78,10 @@ i.left {
 	font-size: 14px;
 	float: left;
 	margin-top: 15px;
+}
+
+.left_colum p {
+	font-size: 12px;
 }
 /* index.html end */
 

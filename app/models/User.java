@@ -18,11 +18,13 @@ import play.db.jpa.Model;
 public class User extends Model {
 	public String name;
 	public String iconUrl;
+//	public Article postedArticle;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	public List<Article> postedArticles;
 
 	public static User findById(String userId) {
 		return User.findById(Long.parseLong(userId));
 	}
 
-	public Article postedArticle;
 
 }

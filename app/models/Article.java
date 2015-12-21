@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 import play.db.jpa.Model;
 
@@ -14,6 +15,8 @@ public class Article extends Model {
 	public Integer liked;
 	public Integer favorite;
 	public boolean isBlackList;
+	@ManyToOne
+	public User user;
 
 	public Article() {
 		view = 0;

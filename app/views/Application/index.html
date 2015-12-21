@@ -18,16 +18,20 @@
  					<div class="row white-text">
 						<div class="divider"></div>
 						<div class="section">
-							<span>グループ名</span>
+							<span>見てるひと</span>
 						</div>
 						<div class="divider"></div>
-							<p>ユーザ名1</p>
-							<p>ユーザ名2</p>
-							<p>ユーザ名3</p>
+						#{if Group}
+							<!-- #{list} #{/list} -->
+						#{/if}
+						#{else}
+							<p>いません</p>
+						#{/else}
+						<div class="divider"></div>
 					</div>
-					<div class="divider"></div>
+
 					<!-- <a class="waves-effect waves-teal btn-flat white-text">invite</a> -->
-					<a class="white-text user-btn-logout" href="#" onclick="logout(); return false;">logout</a>
+					<a class="white-text user-btn-logout" href="#" onclick="logout(); return false;">ログアウト</a>
 			</div>
 		</div> <!-- Left Colum end -->
 		</div>

@@ -1,6 +1,9 @@
 package controllers;
 
+import java.security.acl.Group;
 import java.util.List;
+
+import javax.persistence.criteria.Fetch;
 
 import models.Article;
 import models.HtmlParser;
@@ -26,10 +29,18 @@ public class Application extends Controller {
 
 		User user = null;
 		if (isConnected()) {
-			System.out.println("index");
+//			System.out.println("index");
 			user = User.findById(session.get("userId"));
-			List<Article> articles = user.postedArticle.find("order by id desc").fetch();
-			renderTemplate("Application/index.html",user,articles);
+//			List<Article> articles = user.postedArticle.find("order by id desc").fetch();
+			List<Article> articles = Article.find("user = ? order by id desc", user).fetch();
+
+			/*
+			Group gruoup = Group.findBYid();
+			List<User> groupUsers = Group.users;
+			Article.find("user in (:users) order by id desc").bind("users," groupUsers).Fetch();
+			 */
+
+			renderTemplate("Application/index.html",user, articles);
 		}
 		else {
 			System.out.println("welcome");
@@ -83,22 +94,28 @@ public class Application extends Controller {
 		}
 
 		User user = User.findById(session.get("userId"));
-		user.postedArticle = new Article();
-		user.postedArticle.url = inputUrl;
-		user.postedArticle.isBlackList = checkDomain(user.postedArticle.url);
+		Article submit = new Article();
+		submit.url = inputUrl;
+		submit.isBlackList = checkDomain(submit.url);
+		submit.user = user;
+//		user.postedArticle = new Article();
+//		user.postedArticle.url = inputUrl;
+//		user.postedArticle.isBlackList = checkDomain(user.postedArticle.url);
 
-		if(user.postedArticle.isBlackList) {
+		if(submit.isBlackList) {
 			flash.error("不正なURLです。（ブラックリスト）");
 			index();
 			return;
 		}
 
 		try {
-			HtmlParser.parse(user.postedArticle);
-			if(user.postedArticle.imageUrl.isEmpty()) {
-				user.postedArticle.imageUrl = "/public/images/no_image.png";
+			HtmlParser.parse(submit);
+			if(submit.imageUrl.isEmpty()) {
+				submit.imageUrl = "/public/images/no_image.png";
 			}
-			user.postedArticle.save();
+			submit.save();
+			user.postedArticles.add(submit);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash.error("URLが不正です。");
